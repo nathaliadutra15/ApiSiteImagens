@@ -12,7 +12,6 @@ export class CommentController {
         try {
             comment.criadoEm = new Date();
             comment.atualizadoEm = new Date();
-            comment.curtidas = [];
             await this.commentService.createComment(_postId._postId, comment);
             return res.status(201).send({ message: "Comentário criado com sucesso." });
         } catch (error) {

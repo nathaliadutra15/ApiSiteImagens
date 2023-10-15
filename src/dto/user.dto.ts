@@ -24,7 +24,6 @@ export class Postagem {
 export class Comentario {
     usuario: string;
     comentarioTexto: string;
-    curtidas?: string[];
     criadoEm?: Date;
     atualizadoEm?: Date;
 }

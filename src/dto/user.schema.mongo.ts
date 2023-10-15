@@ -17,7 +17,6 @@ const perfilUsuario = new Schema({
         comentarios: [{
             usuario: String,
             comentarioTexto: String,
-            curtidas: [],
             criadoEm: Date,
             atualizadoEm: Date
         }],
