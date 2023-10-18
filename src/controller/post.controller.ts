@@ -1,11 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Res } from "@nestjs/common";
+import { Body, Controller, Delete, FileTypeValidator, Get, Header, Param, ParseFilePipe, Post, Put, Res, StreamableFile, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from 'express';
+import { createReadStream } from "fs";
 import { User, Postagem } from "src/dto/user.dto";
 import { PostService } from "src/service/post.service";
+import { UploadS3Service } from "src/service/upload-s3.service";
 
 @Controller('post')
 export class PostsController {
-    constructor(private postService: PostService) { }
+    constructor(private postService: PostService, private uploadS3Service: UploadS3Service) { }
 
     @Post('/create/:_id')
     async createPost(@Param() _id, @Body() post: Postagem, @Res() res: Response) {
@@ -83,5 +86,26 @@ export class PostsController {
         } catch (error) {
             return res.status(500).send({ message: error })
         }
+    }
+
+    @Post('/upload')
+    //@Header('Content-Type', 'image/jpeg')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadFile(@UploadedFile(
+        new ParseFilePipe({
+            validators: [
+                new FileTypeValidator({ fileType: 'image/jpeg' }),
+            ],
+        }),
+    ) file: Express.Multer.File, @Res() res: Response) {
+        try {
+            await this.uploadS3Service.uploadOnS3(file);
+            return res.status(201).send({ message: "Upload realizado com sucesso." })
+        } catch (error) {
+            return res.status(500).send({ message: error })
+        }
+
+        //const img = createReadStream('./uploads/29d0036ff8a7228ab5758a442e86e82d');
+        //return new StreamableFile(img);
     }
 }
