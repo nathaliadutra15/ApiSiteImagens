@@ -14,12 +14,10 @@ import { FollowerController } from './controller/follower.controller';
 import { FollowerService } from './service/follower.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { HttpModule } from '@nestjs/axios';
-import { UploadS3Service } from './service/upload-s3.service';
-import { S3 } from "aws-sdk";
+import { S3Service } from './service/s3.service';
 import { AuthModule } from './module/auth.module';
 import { JwtAuthGuard } from './utils/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
-
 
 @Module({
   imports: [
@@ -33,7 +31,7 @@ import { APP_GUARD } from '@nestjs/core';
     AuthModule
   ],
   controllers: [AppController, UserController, PostsController, CommentController, FollowerController],
-  providers: [AppService, DBConnection, UserService, PostService, CommentService, FollowerService, UploadS3Service, S3, {
+  providers: [AppService, DBConnection, UserService, PostService, CommentService, FollowerService, S3Service, {
     provide: APP_GUARD,
     useClass: JwtAuthGuard,
   },],

@@ -4,11 +4,12 @@ import { Response } from 'express';
 import { createReadStream } from "fs";
 import { User, Postagem } from "src/dto/user.dto";
 import { PostService } from "src/service/post.service";
-import { UploadS3Service } from "src/service/upload-s3.service";
+import { S3Service } from "src/service/s3.service";
+import { Public } from "src/utils/public.decorator";
 
 @Controller('post')
 export class PostsController {
-    constructor(private postService: PostService, private uploadS3Service: UploadS3Service) { }
+    constructor(private postService: PostService, private s3Service: S3Service) { }
 
     @Post('/create/:_id')
     async createPost(@Param() _id, @Body() post: Postagem, @Res() res: Response) {
@@ -50,6 +51,7 @@ export class PostsController {
         }
     }
 
+    @Public()
     @Get('/list')
     async getPosts(@Res() res: Response) {
         const postsList = await this.postService.getPosts();
@@ -91,7 +93,7 @@ export class PostsController {
     @Post('/upload')
     //@Header('Content-Type', 'image/jpeg')
     @UseInterceptors(FileInterceptor('file'))
-    async uploadFile(@UploadedFile(
+     uploadFile(@UploadedFile(
         new ParseFilePipe({
             validators: [
                 new FileTypeValidator({ fileType: 'image/jpeg' }),
@@ -99,13 +101,25 @@ export class PostsController {
         }),
     ) file: Express.Multer.File, @Res() res: Response) {
         try {
-            await this.uploadS3Service.uploadOnS3(file);
-            return res.status(201).send({ message: "Upload realizado com sucesso." })
+            const upload = this.s3Service.uploadOnS3(file);
+
+            if (upload) return res.status(201).send({ message: "Upload realizado com sucesso." });
         } catch (error) {
-            return res.status(500).send({ message: error })
+            return res.status(500).send({ message: error });
         }
+
+        //return res.status(201).send({ message: "Upload realizado com sucesso." })
+
+        //
+
 
         //const img = createReadStream('./uploads/29d0036ff8a7228ab5758a442e86e82d');
         //return new StreamableFile(img);
+
+
+
+
+
+
     }
 }

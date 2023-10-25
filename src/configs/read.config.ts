@@ -8,8 +8,8 @@ export default () => (
             secret: process.env.JWT_SECRET as string
         },
         s3: {
-            awsAccessKey: process.env.S3_ACCESS_KEY as string,
-            awsSecretKey: process.env.S3_SECRET_KEY as string
+            url: process.env.S3_URL as string,
+            key: process.env.S3_KEY as string
         }
     }
 );

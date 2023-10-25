@@ -49,6 +49,16 @@ export class UserController {
         }
     }
 
+    @Get('/:email')
+    async getUserByEmail(@Param() email, @Res() res: Response) {
+        const emailFound = await this.userService.getUserByEmail(email.email);
+        if (emailFound.length == 0) {
+            return res.status(422).send({ message: "Email não foi encontrado." });
+        } else {
+            return res.status(200).send(emailFound);
+        }
+    }
+
     @Put('/:username')
     async updateUser(@Param() username, @Body() user: User, @Res() res: Response) {
         if (Object.keys(user).length == 0) {
