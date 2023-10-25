@@ -1,11 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "src/dto/user.dto";
 const userMongoDB = require('../dto/user.schema.mongo');
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class UserService {
-    setUser(user: User) {
+    async setUser(user: User) {
         try {
+            user = {...user, senha: await bcrypt.hash(user.senha, 10)} // Senha criptografada antes de enviar para o banco
             return userMongoDB.create(user);
         } catch (error) {
             return error;

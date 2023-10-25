@@ -16,6 +16,9 @@ import { MulterModule } from '@nestjs/platform-express';
 import { HttpModule } from '@nestjs/axios';
 import { UploadS3Service } from './service/upload-s3.service';
 import { S3 } from "aws-sdk";
+import { AuthModule } from './module/auth.module';
+import { JwtAuthGuard } from './utils/jwt-auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 
 @Module({
@@ -26,9 +29,13 @@ import { S3 } from "aws-sdk";
     MulterModule.register({
       dest: './uploads',
     }),
-    HttpModule
+    HttpModule,
+    AuthModule
   ],
   controllers: [AppController, UserController, PostsController, CommentController, FollowerController],
-  providers: [AppService, DBConnection, UserService, PostService, CommentService, FollowerService, UploadS3Service, S3],
+  providers: [AppService, DBConnection, UserService, PostService, CommentService, FollowerService, UploadS3Service, S3, {
+    provide: APP_GUARD,
+    useClass: JwtAuthGuard,
+  },],
 })
 export class AppModule { }

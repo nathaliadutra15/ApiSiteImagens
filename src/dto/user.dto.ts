@@ -3,10 +3,10 @@ export class User {
     usuario: string;
     dataNasc: Date;
     senha: string;
-    pathFotoPerfil: string;
-    biografia: string;
-    seguidores: string[];
-    seguindo: string[];
+    pathFotoPerfil?: string;
+    biografia?: string;
+    seguidores?: string[];
+    seguindo?: string[];
     posts?: Postagem[];
     criadoEm?: Date;
 }
