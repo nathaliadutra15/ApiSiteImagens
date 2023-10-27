@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, FileTypeValidator, Get, Header, Param, ParseFilePipe, Post, Put, Res, StreamableFile, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from 'express';
-import { createReadStream } from "fs";
-import { User, Postagem } from "src/dto/user.dto";
+import { Postagem } from "src/dto/user.dto";
 import { PostService } from "src/service/post.service";
 import { S3Service } from "src/service/s3.service";
 import { Public } from "src/utils/public.decorator";
@@ -12,15 +11,22 @@ export class PostsController {
     constructor(private postService: PostService, private s3Service: S3Service) { }
 
     @Post('/create/:_id')
-    async createPost(@Param() _id, @Body() post: Postagem, @Res() res: Response) {
+    @UseInterceptors(FileInterceptor('file'))
+    async createPost(@Param() _id, @Body() post: Postagem, @Res() res: Response,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new FileTypeValidator({ fileType: 'image/jpeg' }),
+                ],
+            }),
+        ) file: Express.Multer.File) {
         post.comentarios = [];
         post.criadoEm = new Date();
         post.atualizadoEm = new Date();
         post.curtidas = [];
         post.tags = [];
-
         try {
-            await this.postService.createPost(_id._id, post);
+            await this.postService.createPost(_id._id, post, file);
             return res.status(201).send({ message: "Post criado com sucesso." })
         } catch (error) {
             return res.status(500).send({ message: error })
@@ -91,9 +97,8 @@ export class PostsController {
     }
 
     @Post('/upload')
-    //@Header('Content-Type', 'image/jpeg')
     @UseInterceptors(FileInterceptor('file'))
-     uploadFile(@UploadedFile(
+    async uploadFile(@UploadedFile(
         new ParseFilePipe({
             validators: [
                 new FileTypeValidator({ fileType: 'image/jpeg' }),
@@ -101,25 +106,10 @@ export class PostsController {
         }),
     ) file: Express.Multer.File, @Res() res: Response) {
         try {
-            const upload = this.s3Service.uploadOnS3(file);
-
-            if (upload) return res.status(201).send({ message: "Upload realizado com sucesso." });
+            const upload = await this.s3Service.uploadOnS3(file);
+            return res.status(201).send({ path: upload.data.path });
         } catch (error) {
-            return res.status(500).send({ message: error });
+            return res.status(500).send({ message: "Erro no upload." });
         }
-
-        //return res.status(201).send({ message: "Upload realizado com sucesso." })
-
-        //
-
-
-        //const img = createReadStream('./uploads/29d0036ff8a7228ab5758a442e86e82d');
-        //return new StreamableFile(img);
-
-
-
-
-
-
     }
 }

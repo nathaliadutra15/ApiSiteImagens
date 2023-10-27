@@ -24,9 +24,7 @@ import { APP_GUARD } from '@nestjs/core';
     ConfigModule.forRoot({
       load: [authConfigs]
     }),
-    MulterModule.register({
-      dest: './uploads',
-    }),
+    
     HttpModule,
     AuthModule
   ],

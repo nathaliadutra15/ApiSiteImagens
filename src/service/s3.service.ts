@@ -20,20 +20,22 @@ export class S3Service {
         );
     }
 
-    async uploadOnS3(file: Express.Multer.File): Promise<any> {
-        try {
-            return await this.supabase
-                .storage
-                .from('site_imagens_bucket')
-                .upload(`post/a5d0cb1d2ca368e71926b546dadbdafb`, file.buffer, {
-                    upsert: false,
-                    cacheControl: '3600',
-                    contentType: file.mimetype
-                });
-        } catch (error) {
-            return error;
-        }
+    async uploadOnS3(file: Express.Multer.File) {
+        return await this.supabase
+            .storage
+            .from('site_imagens_bucket')
+            .upload(`post/${file.originalname}_${Date.now().toString()}`, file.buffer, {
+                upsert: false,
+                cacheControl: '3600',
+                contentType: file.mimetype
+            });
+    }
 
+    async createURL(path: string) {
+        return await this.supabase
+            .storage
+            .from('site_imagens_bucket')
+            .createSignedUrl(path, 31557600)
     }
 
 } 

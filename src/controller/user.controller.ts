@@ -55,7 +55,7 @@ export class UserController {
         if (emailFound.length == 0) {
             return res.status(422).send({ message: "Email não foi encontrado." });
         } else {
-            return res.status(200).send(emailFound);
+            return res.status(200).send(emailFound[0]);
         }
     }
 

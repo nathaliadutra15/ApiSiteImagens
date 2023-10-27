@@ -1,13 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import { Postagem } from "src/dto/user.dto";
+import { S3Service } from "./s3.service";
 const userMongoDB = require('../dto/user.schema.mongo');
 
 
 @Injectable()
 export class PostService {
+    constructor(private s3Service: S3Service) { }
 
-    createPost(userId: string, post: Postagem) {
+    async createPost(userId: string, post: Postagem, file?: Express.Multer.File) {
         try {
+            if (file) {
+                const upload = await this.s3Service.uploadOnS3(file);
+                const path = upload.data.path;
+                const url = await this.s3Service.createURL(path);
+                console.log(url);
+            }
+
             return userMongoDB.updateOne({ _id: userId }, { $push: { "posts": post } });
         } catch (error) {
             return error;
