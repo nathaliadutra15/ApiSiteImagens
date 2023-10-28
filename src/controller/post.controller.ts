@@ -11,22 +11,17 @@ export class PostsController {
     constructor(private postService: PostService, private s3Service: S3Service) { }
 
     @Post('/create/:_id')
-    @UseInterceptors(FileInterceptor('file'))
-    async createPost(@Param() _id, @Body() post: Postagem, @Res() res: Response,
-        @UploadedFile(
-            new ParseFilePipe({
-                validators: [
-                    new FileTypeValidator({ fileType: 'image/jpeg' }),
-                ],
-            }),
-        ) file: Express.Multer.File) {
+    async createPost(@Param() _id, @Body() post: Postagem, @Res() res: Response) {
         post.comentarios = [];
         post.criadoEm = new Date();
         post.atualizadoEm = new Date();
         post.curtidas = [];
         post.tags = [];
         try {
-            await this.postService.createPost(_id._id, post, file);
+            if (!post.pathFotoPost) {
+                return res.status(422).send({ message: "Forneça a URL da imagem." });
+            }
+            await this.postService.createPost(_id._id, post);
             return res.status(201).send({ message: "Post criado com sucesso." })
         } catch (error) {
             return res.status(500).send({ message: error })
@@ -107,7 +102,7 @@ export class PostsController {
     ) file: Express.Multer.File, @Res() res: Response) {
         try {
             const upload = await this.s3Service.uploadOnS3(file);
-            return res.status(201).send({ path: upload.data.path });
+            return res.status(201).send({ url: upload.data.signedUrl });
         } catch (error) {
             return res.status(500).send({ message: "Erro no upload." });
         }

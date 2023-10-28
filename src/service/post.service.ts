@@ -10,13 +10,6 @@ export class PostService {
 
     async createPost(userId: string, post: Postagem, file?: Express.Multer.File) {
         try {
-            if (file) {
-                const upload = await this.s3Service.uploadOnS3(file);
-                const path = upload.data.path;
-                const url = await this.s3Service.createURL(path);
-                console.log(url);
-            }
-
             return userMongoDB.updateOne({ _id: userId }, { $push: { "posts": post } });
         } catch (error) {
             return error;

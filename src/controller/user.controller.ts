@@ -21,6 +21,7 @@ export class UserController {
                 return res.status(422).send({ message: "Email já cadastrado." });
             }
             else {
+                user.criadoEm = new Date();
                 this.userService.setUser(user);
                 return res.status(201).send({ message: "Usuário criado com sucesso." });
             }

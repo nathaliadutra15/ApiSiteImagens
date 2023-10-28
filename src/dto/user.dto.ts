@@ -12,7 +12,7 @@ export class User {
 }
 
 export class Postagem {
-    pathFotoPost?: string;
+    pathFotoPost: string;
     descricaoPost: string;
     comentarios?: Comentario[];
     tags?: string[];
