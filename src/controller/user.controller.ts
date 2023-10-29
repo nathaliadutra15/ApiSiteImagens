@@ -48,7 +48,7 @@ export class UserController {
         if (usernameFound.length == 0) {
             return res.status(422).send({ message: "Usuário não foi encontrado." });
         } else {
-            return res.status(200).send(usernameFound);
+            return res.status(200).send(usernameFound[0]);
         }
     }
 
