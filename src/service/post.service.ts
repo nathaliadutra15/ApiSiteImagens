@@ -8,7 +8,7 @@ const userMongoDB = require('../dto/user.schema.mongo');
 export class PostService {
     constructor(private s3Service: S3Service) { }
 
-    async createPost(userId: string, post: Postagem, file?: Express.Multer.File) {
+    async createPost(userId: string, post: Postagem) {
         try {
             return userMongoDB.updateOne({ _id: userId }, { $push: { "posts": post } });
         } catch (error) {
@@ -26,7 +26,7 @@ export class PostService {
 
     getPostByPostId(postId: string) {
         try {
-            return userMongoDB.find({ "posts._id": postId }, { "_id": 0, "posts": 1 }).exec();
+            return userMongoDB.find({ "posts._id": postId }, { "_id": 0, "posts": { "$elemMatch": { "_id": postId } } }).exec();
         } catch (error) {
             return error;
         }
@@ -54,8 +54,11 @@ export class PostService {
         }
     }
 
-    deletePostById(postId: string) {
+    async deletePostById(postId: string) {
         try {
+            const postInfo = await this.getPostByPostId(postId);
+            await this.s3Service.deleteImg(postInfo[0].posts[0].pathFotoPost);
+
             return userMongoDB.updateOne(
                 { "posts._id": postId },
                 { $pull: { "posts": { _id: postId } } },

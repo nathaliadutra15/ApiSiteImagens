@@ -44,11 +44,11 @@ export class PostsController {
     async getPostByPostId(@Param() _postId, @Res() res: Response) {
         const postsList = await this.postService.getPostByPostId(_postId);
         if (postsList.length == 0) {
-            return res.status(422).send({ message: "Usuário não encontrado." });
+            return res.status(422).send({ message: "Post não encontrado." });
         } else if (postsList[0].posts.length == 0) {
-            return res.status(422).send({ message: "Este usuário não possui posts." });
+            return res.status(422).send({ message: "Post não encontrado." });
         } else {
-            return res.status(200).send(postsList[0].posts);
+            return res.status(200).send(postsList[0].posts[0]);
         }
     }
 
