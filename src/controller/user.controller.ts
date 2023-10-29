@@ -52,7 +52,7 @@ export class UserController {
         }
     }
 
-    @Get('/:email')
+    @Get('email/:email')
     async getUserByEmail(@Param() email, @Res() res: Response) {
         const emailFound = await this.userService.getUserByEmail(email.email);
         if (emailFound.length == 0) {
