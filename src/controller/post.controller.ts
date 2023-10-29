@@ -101,7 +101,7 @@ export class PostsController {
         }),
     ) file: Express.Multer.File, @Res() res: Response) {
         try {
-            const upload = await this.s3Service.uploadOnS3(file);
+            const upload = await this.s3Service.uploadOnS3('post',file);
             return res.status(201).send({ url: upload.data.signedUrl });
         } catch (error) {
             return res.status(500).send({ message: "Erro no upload." });

@@ -2,10 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { User } from "src/dto/user.dto";
 const userMongoDB = require('../dto/user.schema.mongo');
 import * as bcrypt from 'bcrypt';
+import { S3Service } from "./s3.service";
 
 
 @Injectable()
 export class UserService {
+    constructor(private s3Service: S3Service) { }
+
     async setUser(user: User) {
         try {
             user = {...user, senha: await bcrypt.hash(user.senha, 10)} // Senha criptografada antes de enviar para o banco
@@ -53,8 +56,11 @@ export class UserService {
         }
     }
  
-    deleteUser(username: String) {
+    async deleteUser(username: String) {
         try {
+            const userInfo = await this.getUserByUsername(username);
+            await this.s3Service.deleteImg(userInfo[0].pathFotoPerfil);
+
             return userMongoDB.deleteOne({ usuario: username });
         } catch (error) {
             return error;

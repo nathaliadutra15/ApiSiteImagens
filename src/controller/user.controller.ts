@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Res } from "@nestjs/common";
+import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from 'express';
 import { User } from "src/dto/user.dto";
+import { S3Service } from "src/service/s3.service";
 import { UserService } from "src/service/user.service";
 import { Public } from "src/utils/public.decorator";
 
 @Controller('user')
 export class UserController {
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService, private s3Service: S3Service) { }
 
     @Public()
     @Post('/register')
@@ -95,6 +97,23 @@ export class UserController {
             return res.status(422).send({ message: "Usuário não encontrado para remover." });
         } else {
             return res.status(200).send({ message: "Usuário deletado com sucesso." });
+        }
+    }
+
+    @Post('/upload')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadFile(@UploadedFile(
+        new ParseFilePipe({
+            validators: [
+                new FileTypeValidator({ fileType: 'image/jpeg' }),
+            ],
+        }),
+    ) file: Express.Multer.File, @Res() res: Response) {
+        try {
+            const upload = await this.s3Service.uploadOnS3('profile',file);
+            return res.status(201).send({ url: upload.data.signedUrl });
+        } catch (error) {
+            return res.status(500).send({ message: "Erro no upload." });
         }
     }
 

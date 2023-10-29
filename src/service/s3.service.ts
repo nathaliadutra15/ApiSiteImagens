@@ -1,9 +1,6 @@
-import { Injectable, StreamableFile } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
-import { url } from "aws-sdk/clients/finspace";
-import { ReadStream, createReadStream } from "fs";
-import { Readable } from "stream";
 
 @Injectable()
 export class S3Service {
@@ -21,8 +18,8 @@ export class S3Service {
         );
     }
 
-    async uploadOnS3(file: Express.Multer.File) {
-        const path = await this.pathUpload(file);
+    async uploadOnS3(origin: string, file: Express.Multer.File) {
+        const path = await this.pathUpload(origin, file);
         return await this.createURL(path.data.path);
     }
 
@@ -33,11 +30,11 @@ export class S3Service {
             .createSignedUrl(path, 31557600)
     }
 
-    async pathUpload(file: Express.Multer.File) {
+    async pathUpload(origin: string, file: Express.Multer.File) {
         return await this.supabase
             .storage
             .from('site_imagens_bucket')
-            .upload(`post/${file.originalname}_${Date.now().toString()}`, file.buffer, {
+            .upload(`${origin}/${file.originalname}_${Date.now().toString()}`, file.buffer, {
                 upsert: false,
                 cacheControl: '3600',
                 contentType: file.mimetype
