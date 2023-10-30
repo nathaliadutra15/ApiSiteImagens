@@ -34,7 +34,7 @@ export class PostService {
 
     getPosts() {
         try {
-            return userMongoDB.find({}, { "_id": 1, "usuario": 1, "pathFotoPerfil": 1, "posts": 1 }).exec();
+            return userMongoDB.find({ $expr: { $gt: [{ $size: "$posts" }, 0] } }, { "_id": 1, "usuario": 1, "pathFotoPerfil": 1, "posts": 1 }).exec();
         } catch (error) {
             return error;
         }
