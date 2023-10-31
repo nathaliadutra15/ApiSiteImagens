@@ -16,9 +16,9 @@ export class PostService {
         }
     }
 
-    getPostsByUserId(userId: string) {
+    getPostsByUsername(username: string) {
         try {
-            return userMongoDB.find({ _id: userId }, { "_id": 1, "usuario": 1, "pathFotoPerfil": 1, "posts": 1 }).exec();
+            return userMongoDB.find({ usuario: username }, { "_id": 1, "usuario": 1, "pathFotoPerfil": 1, "posts": 1 }).exec();
         } catch (error) {
             return error;
         }

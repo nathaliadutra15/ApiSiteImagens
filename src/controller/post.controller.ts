@@ -28,9 +28,9 @@ export class PostsController {
         }
     }
 
-    @Get('/list/user/:_id')
-    async getPostsByUserId(@Param() _id, @Res() res: Response) {
-        const postsList = await this.postService.getPostsByUserId(_id);
+    @Get('/list/user/:username')
+    async getPostsByUsername(@Param() _username, @Res() res: Response) {
+        const postsList = await this.postService.getPostsByUsername(_username.username);
         if (postsList.length == 0) {
             return res.status(422).send({ message: "Usuário não encontrado." });
         } else if (postsList[0].posts.length == 0) {
