@@ -40,6 +40,7 @@ export class PostsController {
         }
     }
 
+    @Public()
     @Get('/list/:_id')
     async getPostByPostId(@Param() _postId, @Res() res: Response) {
         const postsList = await this.postService.getPostByPostId(_postId);
