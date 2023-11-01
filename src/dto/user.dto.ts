@@ -12,6 +12,7 @@ export class User {
 }
 
 export class Postagem {
+    usuario: string;
     pathFotoPost: string;
     descricaoPost: string;
     comentarios?: Comentario[];

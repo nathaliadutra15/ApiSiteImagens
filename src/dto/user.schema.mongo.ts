@@ -12,6 +12,7 @@ const perfilUsuario = new Schema({
     seguidores: [],
     seguindo: [],
     posts: [{
+        usuario: String,
         pathFotoPost: String,
         descricaoPost: String,
         comentarios: [{

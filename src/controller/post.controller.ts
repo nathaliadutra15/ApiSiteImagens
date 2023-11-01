@@ -18,8 +18,8 @@ export class PostsController {
         post.curtidas = [];
         post.tags = [];
         try {
-            if (!post.pathFotoPost) {
-                return res.status(422).send({ message: "Forneça a URL da imagem." });
+            if (!post.usuario || !post.pathFotoPost) {
+                return res.status(422).send({ message: "Forneça todos os campos para criar o post." });
             }
             await this.postService.createPost(_id._id, post);
             return res.status(201).send({ message: "Post criado com sucesso." })
