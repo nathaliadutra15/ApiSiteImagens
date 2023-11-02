@@ -13,8 +13,7 @@ export class CommentController {
             comment.criadoEm = new Date();
             comment.atualizadoEm = new Date();
             await this.commentService.createComment(_postId._postId, comment);
-            let comments = await this.commentService.getCommentsById(_postId._postId);
-            return res.status(201).send(comments["posts"].map(item => item.comentarios).flat());
+            return res.status(201).send(comment);
         } catch (error) {
             return res.status(500).send({ message: error });
         }
