@@ -74,16 +74,23 @@ export class PostService {
             let likes = await this.getPostByPostId(postId);
 
             if (likes[0].posts[0].curtidas.includes(username)) {
-                return userMongoDB.updateOne(
+                await userMongoDB.updateOne(
                     { "posts._id": postId },
                     { $pull: { 'posts.$.curtidas': { $in: [username] } } }
                 );
+
+                return {
+                    tipo: 'dislike'
+                }
             } else {
-                return userMongoDB.updateOne(
+                await userMongoDB.updateOne(
                     { "posts._id": postId },
                     { $push: { 'posts.$[r].curtidas': username } },
                     { arrayFilters: [{ 'r._id': postId }] }
                 );
+                return {
+                    tipo: 'like'
+                }
             }
         } catch (error) {
             return error;

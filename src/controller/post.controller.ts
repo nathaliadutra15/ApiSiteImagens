@@ -85,8 +85,8 @@ export class PostsController {
     @Post('/like/:_id')
     async likePostById(@Param() _postId, @Body() user, @Res() res: Response) {
         try {
-            await this.postService.likePostById(_postId._id, user.usuario);
-            return res.status(201).send({ message: "Curtida atualizada com sucesso." })
+            const type = await this.postService.likePostById(_postId._id, user.usuario);
+            return res.status(201).send(type)
         } catch (error) {
             return res.status(500).send({ message: error })
         }
