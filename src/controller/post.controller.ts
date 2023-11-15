@@ -28,6 +28,7 @@ export class PostsController {
         }
     }
 
+    @Public()
     @Get('/list/user/:username')
     async getPostsByUsername(@Param() _username, @Res() res: Response) {
         const postsList = await this.postService.getPostsByUsername(_username.username);
