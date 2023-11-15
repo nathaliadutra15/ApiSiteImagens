@@ -16,4 +16,8 @@ export class DBConnection {
                 console.log("BANCO MONGODB CONECTADO");
             }).catch((err) => console.log(err));
     }
+
+    async disconnectMongo() {
+        return await mongoose.disconnect();
+    }
 }

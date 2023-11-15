@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from 'express';
-import { User } from "src/dto/user.dto";
-import { S3Service } from "src/service/s3.service";
-import { UserService } from "src/service/user.service";
-import { Public } from "src/utils/public.decorator";
+import { User } from "../dto/user.dto";
+import { S3Service } from "../service/s3.service";
+import { UserService } from "../service/user.service";
+import { Public } from "../utils/public.decorator";
 
 @Controller('user')
 export class UserController {
@@ -25,7 +25,7 @@ export class UserController {
             else {
                 user.criadoEm = new Date();
                 this.userService.setUser(user);
-                return res.status(201).send({ message: "Usuário criado com sucesso." });
+                return res.status(201).send({ message: `Usuário "${user.usuario}" criado com sucesso.` });
             }
         } catch (error) {
             return res.status(500).send({ message: error });
@@ -110,7 +110,7 @@ export class UserController {
         }),
     ) file: Express.Multer.File, @Res() res: Response) {
         try {
-            const upload = await this.s3Service.uploadOnS3('profile',file);
+            const upload = await this.s3Service.uploadOnS3('profile', file);
             return res.status(201).send({ url: upload.data.signedUrl });
         } catch (error) {
             return res.status(500).send({ message: "Erro no upload." });

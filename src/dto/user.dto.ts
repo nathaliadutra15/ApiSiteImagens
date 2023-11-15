@@ -1,4 +1,5 @@
 export class User {
+    _id?: string;
     email: string;
     usuario: string;
     dataNasc: Date;
@@ -9,6 +10,7 @@ export class User {
     seguindo?: string[];
     posts?: Postagem[];
     criadoEm?: Date;
+    __v?: Number;
 }
 
 export class Postagem {
@@ -20,6 +22,7 @@ export class Postagem {
     curtidas?: string[];
     criadoEm?: Date;
     atualizadoEm?: Date;
+    _id?: string;
 }
 
 export class Comentario {
@@ -27,4 +30,5 @@ export class Comentario {
     comentarioTexto: string;
     criadoEm?: Date;
     atualizadoEm?: Date;
+    _id?: string;
 }

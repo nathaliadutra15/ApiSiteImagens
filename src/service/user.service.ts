@@ -11,7 +11,7 @@ export class UserService {
 
     async setUser(user: User) {
         try {
-            user = {...user, senha: await bcrypt.hash(user.senha, 10)} // Senha criptografada antes de enviar para o banco
+            user = { ...user, senha: await bcrypt.hash(user.senha, 10) } // Senha criptografada antes de enviar para o banco
             return userMongoDB.create(user);
         } catch (error) {
             return error;
@@ -26,7 +26,7 @@ export class UserService {
         }
     }
 
-     getUserByUsername(username: String) {
+    getUserByUsername(username: String) {
         try {
             return userMongoDB.find({ usuario: username }).exec();
         } catch (error) {
@@ -48,14 +48,14 @@ export class UserService {
         Object.keys(user).map(key => {
             userUpdates[key] = user[key]
         })
-        
+
         try {
-            return userMongoDB.updateOne( { usuario: username }, { $set: userUpdates }).exec();
+            return userMongoDB.updateOne({ usuario: username }, { $set: userUpdates }).exec();
         } catch (error) {
             return error;
         }
     }
- 
+
     async deleteUser(username: String) {
         try {
             const userInfo = await this.getUserByUsername(username);
