@@ -9,8 +9,8 @@ export class FollowerController {
     @Post('/follow/:_seguidor/:_seguido')
     async followUser(@Param() _seguidor, @Param() _seguido, @Res() res: Response) {
         try {
-            await this.followerService.followUser(_seguidor._seguidor, _seguido._seguido);
-            return res.status(201).send({ message: "Seguidores atualizados com sucesso." })
+            const seguidores = await this.followerService.followUser(_seguidor._seguidor, _seguido._seguido);
+            return res.status(201).send(seguidores)
         } catch (error) {
             return res.status(500).send({ message: error })
         }

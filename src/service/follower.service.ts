@@ -35,7 +35,10 @@ export class FollowerService {
                     { $pull: { 'seguidores': { $in: [userSeguidor[0].usuario] } } }
                 )
             }
-            return {};
+
+            userSeguido = await this.userService.getUserByUsername(seguido);
+
+            return userSeguido[0].seguidores;
         } catch (error) {
             return error;
         }
