@@ -13,7 +13,8 @@ jobs:
         uses: actions/checkout@master
 
       - name: Create .env file
-        run: echo -e "${{ secrets.ENV_FILE }}" > .env
+        run: |
+          echo "${{ secrets.ENV_FILE }}" >> .env
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
