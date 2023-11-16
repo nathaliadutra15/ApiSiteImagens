@@ -1,9 +1,16 @@
-name: Run Tests
+name: Github Actions - API IMAGENS
 
 on:
   push:
     branches:
       - master
+env:
+  APP_PORT: ${{secrets.APP_PORT}}
+  DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+  DATABASE_USER: ${{secrets.DATABASE_USER}}
+  JWT_SECRET: ${{secrets.JWT_SECRET}}
+  S3_URL: ${{secrets.S3_URL}}
+  S3_KEY: ${{secrets.S3_KEY}}
 
 jobs:
   test:
@@ -38,6 +45,5 @@ jobs:
 
     - name: Sincronizar com o repositório original
       run: |
-        git checkout master
         git merge upstream/master --no-edit
         git push
