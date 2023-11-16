@@ -13,7 +13,6 @@ export class DBConnection {
 
         mongoose.connect(`mongodb+srv://${databaseUser}:${databasePass}@clustersiteimagens.fjfxopf.mongodb.net/?retryWrites=true&w=majority`)
             .then(() => {
-                console.log("BANCO MONGODB CONECTADO");
             }).catch((err) => console.log(err));
     }
 

@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from 'express';
-import { Postagem } from "src/dto/user.dto";
-import { PostService } from "src/service/post.service";
-import { S3Service } from "src/service/s3.service";
-import { Public } from "src/utils/public.decorator";
+import { Postagem } from "../dto/user.dto";
+import { PostService } from "../service/post.service";
+import { S3Service } from "../service/s3.service";
+import { Public } from "../utils/public.decorator";
 
 @Controller('post')
 export class PostsController {
