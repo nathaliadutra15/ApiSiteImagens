@@ -12,10 +12,10 @@ jobs:
       - name: Build env file
         run: |
           echo "APP_PORT=${{ secrets.APP_PORT }}" >> .env
-          echo "APP_PORT=${{ secrets.DATABASE_PASSWORD }}" >> .env
-          echo "APP_PORT=${{ secrets.DATABASE_USER }}" >> .env
-          echo "APP_PORT=${{ secrets.JWT_SECRET }}" >> .env
-          echo "APP_PORT=${{ secrets.S3_KEY }}" >> .env
+          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
+          echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "S3_KEY=${{ secrets.S3_KEY }}" >> .env
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
