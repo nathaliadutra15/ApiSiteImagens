@@ -1,5 +1,4 @@
 name: Github Actions - API IMAGENS
-
 on:
   push:
     branches:
@@ -10,12 +9,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Use .env file
-        uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.DOTENV_FILE }}" >> .env
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: 18
-          env-file: ${{ secrets.DOTENV_FILE }}
-          
+
       - name: Install dependencies
         run: npm install
 
