@@ -15,6 +15,9 @@ jobs:
         with:
           node-version: 18
           env-file: ${{ secrets.ENV_FILE }}
+          
+      - name: Navigate to project directory
+        run: cd ApiSiteImagens
 
       - name: Install dependencies
         run: npm install
