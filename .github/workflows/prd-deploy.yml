@@ -14,8 +14,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          env-file: ${{ secrets.ENV_FILE }}
-          
+          env-file: ${{ secrets.DOTENV_FILE }}
+
       - name: Navigate to project directory
         run: cd ApiSiteImagens
 
