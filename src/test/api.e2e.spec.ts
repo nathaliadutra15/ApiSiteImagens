@@ -268,17 +268,24 @@ describe('Usuários', () => {
   });
 
   it(`TST 12 - ATUALIZAR COMENTÁRIO (PUT /comment/update/:postid)`, async () => {
-    await request(app.getHttpServer())
-      .put(`/comment/update/${idComment}`)
+    const response = await request(app.getHttpServer())
+      .put(`/comment/update/${idComment}/post/${idPost}`)
       .send({
         "comentarioTexto": "Teste E2E - Atualização comentários"
       })
-      .expect(201)
-      .expect(
-        {
-          "message": `Comentário atualizado com sucesso.`
-        }
-      );
+      .expect(201);
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          usuario: expect.any(String),
+          comentarioTexto: expect.any(String),
+          criadoEm: expect.any(String),
+          atualizadoEm: expect.any(String),
+          _id: expect.any(String)
+        })
+      ])
+    );
   });
 
   it(`TST 13 - EXCLUSÃO DE COMENTÁRIO (DELETE /comment/remove/:commentid)`, async () => {
@@ -303,7 +310,7 @@ describe('Usuários', () => {
       );
   });
 
-   it(`TST 15 - EXCLUSÃO DE USUÁRIO (DELETE /user/remove/:username)`, async () => {
+  it(`TST 15 - EXCLUSÃO DE USUÁRIO (DELETE /user/remove/:username)`, async () => {
     await request(app.getHttpServer())
       .delete(`/user/remove/${date}-teste`)
       .expect(200)
@@ -312,7 +319,7 @@ describe('Usuários', () => {
           "message": "Usuário deletado com sucesso."
         }
       );
-  }); 
+  });
 
   afterAll(async () => {
     await dbConnection.disconnectMongo()
