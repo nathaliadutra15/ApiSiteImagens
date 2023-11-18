@@ -30,12 +30,13 @@ export class CommentController {
 
     }
 
-    @Put('/update/:_commentId')
-    async updateCommentById(@Param() _commentId, @Body() comment: Comentario, @Res() res: Response) {
+    @Put('/update/:_commentId/post/:_postId')
+    async updateCommentById(@Param() _commentId, @Param() _postId, @Body() comment: Comentario, @Res() res: Response) {
         try {
             comment.atualizadoEm = new Date();
             await this.commentService.updateCommentById(_commentId._commentId, comment);
-            return res.status(201).send({ message: "Comentário atualizado com sucesso." })
+            const updatedComments = await this.commentService.getCommentsById(_postId._postId);
+            return res.status(201).send(updatedComments["posts"].map(item => item.comentarios).flat())
         } catch (error) {
             return res.status(500).send({ message: error });
         }
