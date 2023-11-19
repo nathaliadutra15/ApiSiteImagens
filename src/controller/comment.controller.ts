@@ -2,10 +2,11 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Res } from "@nestjs/co
 import { Response } from 'express';
 import { Comentario } from "../dto/user.dto";
 import { CommentService } from "../service/comment.service"
+import { PostService } from "../service/post.service";
 
 @Controller('comment')
 export class CommentController {
-    constructor(private commentService: CommentService) { }
+    constructor(private commentService: CommentService, private postService: PostService) { }
 
     @Post('/create/:_postId')
     async createComment(@Param() _postId, @Body() comment: Comentario, @Res() res: Response) {
@@ -38,8 +39,8 @@ export class CommentController {
         try {
             comment.atualizadoEm = new Date();
             await this.commentService.updateCommentById(_commentId._commentId, comment);
-            const updatedComments = await this.commentService.getCommentsById(_postId._postId);
-            return res.status(201).send(updatedComments["posts"].map(item => item.comentarios).flat())
+            const postInfos = await this.postService.getPostByPostId(_postId._postId);
+            return res.status(201).send(postInfos[0].posts[0])
         } catch (error) {
             return res.status(500).send({ message: error });
         }

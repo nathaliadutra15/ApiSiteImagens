@@ -268,7 +268,7 @@ describe('Usuários', () => {
     idComment = response.body[0]._id;
   });
 
-  it(`TST 12 - ATUALIZAR COMENTÁRIO (PUT /comment/update/:postid)`, async () => {
+  it(`TST 12 - ATUALIZAR COMENTÁRIO (PUT /comment/update/:idcomment/post/:idpost)`, async () => {
     const response = await request(app.getHttpServer())
       .put(`/comment/update/${idComment}/post/${idPost}`)
       .send({
@@ -276,17 +276,19 @@ describe('Usuários', () => {
       })
       .expect(201);
 
-    expect(response.body).toEqual(
-      expect.arrayContaining([
+      expect(response.body).toEqual(
         expect.objectContaining({
           usuario: expect.any(String),
-          comentarioTexto: expect.any(String),
+          pathFotoPost: expect.any(String),
+          descricaoPost: expect.any(String),
+          comentarios: expect.any(Array),
+          tags: expect.any(Array),
+          curtidas: expect.any(Array),
           criadoEm: expect.any(String),
           atualizadoEm: expect.any(String),
           _id: expect.any(String)
         })
-      ])
-    );
+      );
   });
 
   it(`TST 13 - EXCLUSÃO DE COMENTÁRIO (DELETE /comment/remove/:commentid)`, async () => {
