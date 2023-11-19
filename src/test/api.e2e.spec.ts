@@ -242,7 +242,8 @@ describe('Usuários', () => {
         usuario: expect.any(String),
         comentarioTexto: expect.any(String),
         criadoEm: expect.any(String),
-        atualizadoEm: expect.any(String)
+        atualizadoEm: expect.any(String),
+        _id: expect.any(String)
       })
     );
   });
