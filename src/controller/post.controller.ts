@@ -93,6 +93,16 @@ export class PostsController {
         }
     }
 
+    @Post('/like/mobile/:_id')
+    async likePostByIdMobile(@Param() _postId, @Body() user, @Res() res: Response) {
+        try {
+            const arr = await this.postService.likePostByIdMobile(_postId._id, user.usuario);
+            return res.status(201).send(arr)
+        } catch (error) {
+            return res.status(500).send({ message: error })
+        }
+    }
+
     @Post('/upload')
     @UseInterceptors(FileInterceptor('file'))
     async uploadFile(@UploadedFile(

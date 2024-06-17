@@ -46,7 +46,7 @@ export class UserController {
     async getUser(@Param() username, @Res() res: Response) {
         const usernameFound = await this.userService.getUserByUsername(username.username);
         if (usernameFound.length == 0) {
-            return res.status(422).send({ message: "Usuário não foi encontrado." });
+            return res.status(404).send({ message: "Usuário não foi encontrado." });
         } else {
             return res.status(200).send(usernameFound[0]);
         }

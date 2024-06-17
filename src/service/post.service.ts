@@ -69,6 +69,16 @@ export class PostService {
         }
     }
 
+    async likePostByIdMobile (postId: string, username: String) {
+        try {
+            await this.likePostById(postId, username);
+            let post = await this.getPostByPostId(postId);
+            return post[0].posts[0].curtidas;
+        } catch (error) {
+            return error;
+        }
+    }
+
     async likePostById(postId: string, username: String) {
         try {
             let likes = await this.getPostByPostId(postId);
